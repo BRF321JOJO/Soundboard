@@ -20,7 +20,7 @@ public class Image {
     private int topy = MyGdxGame.V_HEIGHT;
 
     Image() {
-        texture = new Texture("Meme.jpg");
+        texture = new Texture("test6.jpg");
         posx = 0;
         posy = 0;
         width = MyGdxGame.V_WIDTH;

@@ -16,12 +16,12 @@ public class GameScreen implements Screen {
     private final int LEVEL_WIDTH;
     private final int LEVEL_HEIGHT;
 
-    Audio audio;
-    Image image;
-    HUD hud;
+    private Audio audio;
+    private Image image;
+    private HUD hud;
 
     //Constructor
-    public GameScreen(MyGdxGame game) {
+    GameScreen(MyGdxGame game) {
         this.game = game;
         //Equates variable values to that declared in MyGdxGame class
         LEVEL_WIDTH = MyGdxGame.V_WIDTH;
@@ -80,15 +80,16 @@ public class GameScreen implements Screen {
     }
 
     //Updates game using update method in each class
-    public void update(float delta) {
+    private void update(float delta) {
 
         audio.update(delta);
 
         image.update(delta);
 
         hud.update(delta);
-        hud.updatePitch("Pitch: " + Audio.pitches[0]);
-        hud.updatePan("Pan: " + Audio.pans[0]);
+        hud.updatePitch("Pitch: " + Audio.Globalpitch);
+        hud.updatePan("Pan: " + Audio.Globalpan);
+
         hud.updateLSHIFT("LSHIFT");
         hud.updateRSHIFT("RSHIFT");
     }

@@ -15,28 +15,14 @@ import java.io.File;
 
 public class HUD {
     Stage stage;
-    Viewport viewport;
-    Label Globalpitch;
-    Label Globalpan;
-    Label LSHIFT;
-    Label RSHIFT;
+    private Viewport viewport;
+    private Label Globalpitch;
+    private Label Globalpan;
+    private Label LSHIFT;
+    private Label RSHIFT;
 
-    //Changes size of LSHIFT/RSHIFT if pressed
-    public void update (float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            LSHIFT.setFontScale(2f);
-        } else {
-            LSHIFT.setFontScale(1.3f);
-        }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-            RSHIFT.setFontScale(2f);
-        } else {
-            RSHIFT.setFontScale(1.3f);
-        }
-    }
-
-    public HUD(SpriteBatch batch) {
+    HUD(SpriteBatch batch) {
         viewport = new ScreenViewport(new OrthographicCamera());
 
         BitmapFont pixelFont = new BitmapFont(
@@ -85,6 +71,22 @@ public class HUD {
         stage.addActor(displayTable);
         stage.addActor(bottomleftTable);
         stage.addActor(bottomrightTable);
+    }
+
+
+    public void update (float delta) {
+        //Changes size of LSHIFT/RSHIFT if pressed
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            LSHIFT.setFontScale(2f);
+        } else {
+            LSHIFT.setFontScale(1.3f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+            RSHIFT.setFontScale(2f);
+        } else {
+            RSHIFT.setFontScale(1.3f);
+        }
     }
 
     public void updatePitch (String Globalpitchupdate) {Globalpitch.setText(Globalpitchupdate);}

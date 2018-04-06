@@ -11,10 +11,14 @@ public class Audio {
     //For Debug
     private boolean Debugmodeon = false;
     private static final int numberofbuttons = 2;
+    private static int lastbuttonpressed;
 
     //Controls global values
-    private static float Globalpanchange = 0.5f;
-    private static float Globalpitchchange = 0.02f;
+    private static float panchange = 0.5f;
+    private static float pitchchange = 0.02f;
+
+    protected static float Globalpitch = 1f;
+    protected static float Globalpan = 0f;
 
 
     //Array of sound names
@@ -25,8 +29,8 @@ public class Audio {
 
     //Arrays (miscellaneous)
     private static float[] volumes = new float[numberofbuttons];
-    static float[] pitches = new float[numberofbuttons];
-    static float[] pans = new float[numberofbuttons];
+    private static float[] pitches = new float[numberofbuttons];
+    private static float[] pans = new float[numberofbuttons];
 
     //Array of sounds
     private static Sound[] songs = new Sound[numberofbuttons];
@@ -39,7 +43,7 @@ public class Audio {
     //Constructor
     Audio() {
 
-        //Sets volumes
+        //Sets volume, pitch, pan
         for (int i = 0; i < numberofbuttons; i++) {
             volumes[i] = 1f;
             pitches[i] = 1f;
@@ -52,11 +56,16 @@ public class Audio {
     }
 
     //Method
+    //Plays songs
     private static void playSong(int buttonpressed) {
         songs[buttonpressed].play(volumes[buttonpressed], pitches[buttonpressed], pans[buttonpressed]);
         System.out.println("Song " + buttonpressed + " was played");
+
+        //Makes a new variable which can be used as the last button pressed
+        lastbuttonpressed = buttonpressed;
     }
 
+    //Stops songs
     private static void stopSong() {
         for (int i = 0; i< numberofbuttons; i++) {
             songs[i].stop();
@@ -66,36 +75,73 @@ public class Audio {
     //Update
     void update(float delta) {
 
-        //Global pitch control
-        //Have to hold Left Shift
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+        //Unknown, for some reason, Globalpan and Globalpitch increment double that of its value. So divide by 2 to fix.
 
-            for (int i = 0; i < numberofbuttons; i++) {
-                //If pressing up, increase pitch
+        //Global pitch/pan control control
+        for (int i = 0; i < numberofbuttons; i++) {
+
+            //Doesn't work if LSHIFT is pressed
+            if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+
+                //If pressing up, increase pitch (and global)
                 if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                    pitches[i] += Globalpitchchange;
+                    pitches[i] += pitchchange;
+                    Globalpitch += pitchchange/2;
                 }
 
-                //If pressing down, decrease pitch
+                //If pressing down, decrease pitch (and global)
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                    pitches[i] -= Globalpitchchange;
+                    pitches[i] -= pitchchange;
+                    Globalpitch -= pitchchange/2;
+                }
+                //If press left, decrease pan (and global)
+                if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                    pans[i] -= panchange;
+                    Globalpan -= panchange/2;
+                }
+
+                //If press right, increase pan (and global)
+                if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                    pans[i] += panchange;
+                    Globalpan += panchange/2;
                 }
             }
         }
 
-        //Global pan control
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-            for (int i = 0; i < numberofbuttons; i++) {
-                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                    pans[i] += Globalpanchange;
-                }
-
-                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                    pans[i] -= Globalpanchange;
-                }
+        //Controls pitch and pan individually for last button pressed
+        if (Gdx.input.isKeyPressed((Input.Keys.SHIFT_LEFT))) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                pitches[lastbuttonpressed] += pitchchange;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                pitches[lastbuttonpressed] -= pitchchange;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                pans[lastbuttonpressed] -= panchange;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                pans[lastbuttonpressed] += panchange;
             }
         }
 
+        //Doesn't do anything right now
+//        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+//
+//        }
+
+        //Prevents unnecessary changes to global pitch or pan
+        if (Globalpitch > 2.0) {
+            Globalpitch = 2.0f;
+        }
+        if (Globalpitch < 0.5) {
+            Globalpitch = 0.5f;
+        }
+        if (Globalpan < -1) {
+            Globalpan = -1f;
+        }
+        if (Globalpan > 1) {
+            Globalpan = 1f;
+        }
 
         //Prevents large unnecessary changes to pitch or pan
         for (int i = 0; i<numberofbuttons; i++) {
@@ -106,16 +152,15 @@ public class Audio {
                 pitches[i] = 0.5f;
             }
             if (pans[i] < -1) {
-                pans[i] = -1;
+                pans[i] = -1f;
             }
             if (pans[i] > 1) {
-                pans[i] = 1;
+                pans[i] = 1f;
             }
         }
 
         //Play Sounds
         //Only works if Tab not pressed
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             if (Debugmodeon) {
                 Debugmodeon = false;
@@ -220,6 +265,7 @@ public class Audio {
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("That button does not play a sound!");
             }
+
 
         }
     }

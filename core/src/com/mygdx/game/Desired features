@@ -1,1 +1,1 @@
-Make pitch and pan individually controllable
+Unknown, for some reason, Globalpan and Globalpitch increment double that of its value. So divide by 2 to fix.
