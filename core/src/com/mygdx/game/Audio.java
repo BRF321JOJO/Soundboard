@@ -10,8 +10,6 @@ public class Audio {
 
     //For Debug
     private boolean Debugmodeon = false;
-
-    private int buttonpressed;
     private static final int numberofbuttons = 2;
 
     //Controls global values
@@ -20,13 +18,13 @@ public class Audio {
 
 
     //Array of sound names
-    private static String[] filename = {
+    private static final String[] filename = {
             "Spaget.mp3",
             "ImQazi.mp3"
     };
 
     //Arrays (miscellaneous)
-    static float[] volumes = new float[numberofbuttons];
+    private static float[] volumes = new float[numberofbuttons];
     static float[] pitches = new float[numberofbuttons];
     static float[] pans = new float[numberofbuttons];
 
@@ -42,56 +40,44 @@ public class Audio {
     Audio() {
 
         //Sets volumes
-        for (int v = 0; v < volumes.length; v++) {
-            volumes[v] = 1f;
+        for (int i = 0; i < numberofbuttons; i++) {
+            volumes[i] = 1f;
+            pitches[i] = 1f;
+            pans[i] = 0f;
+
+            //Creates song
+            songs[i] = createSong(filename[i]);
         }
 
-        //Sets pitches
-        for (int p = 0; p < volumes.length; p++) {
-            pitches[p] = 1f;
-        }
-
-        //Sets pans
-        for (int a = 0; a < volumes.length; a++) {
-            pans[a] = 0f;
-        }
-
-        //Creates song
-        for (int s = 0; s < songs.length; s++) {
-            songs[s] = createSong(filename[s]);
-        }
     }
 
     //Method
-    public static void playSong(int buttonpresses) {
-        songs[buttonpresses].play(volumes[buttonpresses], pitches[buttonpresses], pans[buttonpresses]);
-        System.out.println("Song " + buttonpresses + " was played");
+    private static void playSong(int buttonpressed) {
+        songs[buttonpressed].play(volumes[buttonpressed], pitches[buttonpressed], pans[buttonpressed]);
+        System.out.println("Song " + buttonpressed + " was played");
     }
 
-    public static void stopSong() {
-        for (int i = 0; i<songs.length; i++) {
+    private static void stopSong() {
+        for (int i = 0; i< numberofbuttons; i++) {
             songs[i].stop();
         }
     }
 
     //Update
-    public void update(float delta) {
+    void update(float delta) {
 
         //Global pitch control
         //Have to hold Left Shift
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
 
-            //If pressing up, increase pitch
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-
-                for (int i = 0; i < pitches.length; i++) {
+            for (int i = 0; i < numberofbuttons; i++) {
+                //If pressing up, increase pitch
+                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                     pitches[i] += Globalpitchchange;
                 }
-            }
-            //If pressing down, decrease pitch
-            if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
 
-                for (int i = 0; i < pitches.length; i++) {
+                //If pressing down, decrease pitch
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
                     pitches[i] -= Globalpitchchange;
                 }
             }
@@ -99,14 +85,12 @@ public class Audio {
 
         //Global pan control
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-
-                for (int i = 0; i < pans.length; i++) {
+            for (int i = 0; i < numberofbuttons; i++) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                     pans[i] += Globalpanchange;
                 }
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                for (int i = 0; i < pans.length; i++) {
+
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
                     pans[i] -= Globalpanchange;
                 }
             }
@@ -114,17 +98,19 @@ public class Audio {
 
 
         //Prevents large unnecessary changes to pitch or pan
-        if (pitches[0] > 2.0) {
-            pitches[0] = 2.0f;
-        }
-        if (pitches[0] < 0.5) {
-            pitches[0] = 0.5f;
-        }
-        if (pans[0] < -1) {
-            pans[0] = -1;
-        }
-        if (pans[0] > 1) {
-            pans[0] = 1;
+        for (int i = 0; i<numberofbuttons; i++) {
+            if (pitches[i] > 2.0) {
+                pitches[i] = 2.0f;
+            }
+            if (pitches[i] < 0.5) {
+                pitches[i] = 0.5f;
+            }
+            if (pans[i] < -1) {
+                pans[i] = -1;
+            }
+            if (pans[i] > 1) {
+                pans[i] = 1;
+            }
         }
 
         //Play Sounds
@@ -133,8 +119,10 @@ public class Audio {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             if (Debugmodeon) {
                 Debugmodeon = false;
+                System.out.println("Debug off");
             } else {
                 Debugmodeon = true;
+                System.out.println("Debug on");
             }
         }
 
@@ -142,109 +130,84 @@ public class Audio {
 
             //Tries to play a sound
             try {
+
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-                    buttonpressed = 0;
-                    playSong(buttonpressed);
+                    playSong(0);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-                    buttonpressed = 1;
-                    playSong(buttonpressed);
+                    playSong(1);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-                    buttonpressed = 2;
-                    playSong(buttonpressed);
+                    playSong(2);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-                    buttonpressed = 3;
-                    playSong(buttonpressed);
+                    playSong(3);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                    buttonpressed = 4;
-                    playSong(buttonpressed);
+                    playSong(4);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-                    buttonpressed = 5;
-                    playSong(buttonpressed);
+                    playSong(5);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-                    buttonpressed = 6;
-                    playSong(buttonpressed);
+                    playSong(6);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-                    buttonpressed = 7;
-                    playSong(buttonpressed);
+                    playSong(7);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-                    buttonpressed = 8;
-                    playSong(buttonpressed);
+                    playSong(8);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-                    buttonpressed = 9;
-                    playSong(buttonpressed);
+                    playSong(9);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-                    buttonpressed = 10;
-                    playSong(buttonpressed);
+                    playSong(10);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-                    buttonpressed = 11;
-                    playSong(buttonpressed);
+                    playSong(11);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-                    buttonpressed = 12;
-                    playSong(buttonpressed);
+                    playSong(12);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-                    buttonpressed = 13;
-                    playSong(buttonpressed);
+                    playSong(13);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-                    buttonpressed = 14;
-                    playSong(buttonpressed);
+                    playSong(14);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-                    buttonpressed = 15;
-                    playSong(buttonpressed);
+                    playSong(15);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-                    buttonpressed = 16;
-                    playSong(buttonpressed);
+                    playSong(16);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-                    buttonpressed = 17;
-                    playSong(buttonpressed);
+                    playSong(17);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-                    buttonpressed = 18;
-                    playSong(buttonpressed);
+                    playSong(18);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-                    buttonpressed = 19;
-                    playSong(buttonpressed);
+                    playSong(19);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-                    buttonpressed = 20;
-                    playSong(buttonpressed);
+                    playSong(20);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-                    buttonpressed = 21;
-                    playSong(buttonpressed);
+                    playSong(21);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-                    buttonpressed = 22;
-                    playSong(buttonpressed);
+                    playSong(22);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-                    buttonpressed = 23;
-                    playSong(buttonpressed);
+                    playSong(23);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-                    buttonpressed = 24;
-                    playSong(buttonpressed);
+                    playSong(24);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-                    buttonpressed = 25;
-                    playSong(buttonpressed);
+                    playSong(25);
                 }
 
                 //Stops all sounds
@@ -257,7 +220,6 @@ public class Audio {
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("That button does not play a sound!");
             }
-
 
         }
     }
