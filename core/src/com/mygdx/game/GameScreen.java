@@ -92,5 +92,6 @@ public class GameScreen implements Screen {
 
         hud.updateLSHIFT("LSHIFT");
         hud.updateRSHIFT("RSHIFT");
+        hud.updateSPACE("SPACE");
     }
 }
