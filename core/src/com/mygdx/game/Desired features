@@ -1,2 +1,8 @@
 Unknown, for some reason, Globalpan and Globalpitch increment double that of its value. So divide by 2 to fix.
-Make the float pitch/pan found to good decimals
+Make the float pitch/pan round to good decimals
+Make pan actually pan (panning doesn't work on stereo files)
+
+Add information screen:
+1.) What buttons do
+2.) Pan only works with mono files
+3.) Author

@@ -83,12 +83,24 @@ public class GameScreen implements Screen {
     private void update(float delta) {
 
         audio.update(delta);
-
         image.update(delta);
 
+
+        //Says natural pitch if pitch at normal value
         hud.update(delta);
-        hud.updatePitch("Pitch: " + Audio.Globalpitch);
-        hud.updatePan("Pan: " + Audio.Globalpan);
+        if (Audio.Globalpitch == 1f) {
+            hud.updatePitch("Pitch: Natural");
+        } else {
+            hud.updatePitch("Pitch: " + Audio.Globalpitch);
+        }
+
+        //Says pan neutral if at normal value
+        if (Audio.Globalpan == 0f) {
+            hud.updatePan("Pan: Neutral");
+        } else {
+            hud.updatePan("Pan: " + Audio.Globalpan);
+        }
+
 
         hud.updateLSHIFT("LSHIFT");
         hud.updateRSHIFT("RSHIFT");
