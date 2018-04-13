@@ -16,15 +16,19 @@ public class DesktopLauncher {
 		//Sets values the window's values for width and height
 		config.height = MyGdxGame.V_HEIGHT;
 		config.width = MyGdxGame.V_WIDTH;
-		//FPS setting
+
+		//FPS setting.
 		config.foregroundFPS=60;
 		//VSync stuffs
 		config.vSyncEnabled=true;
 
 		//Names the window it runs it
 		config.title = "Soundboard";
+
 		//Makes the window image icon desired image
 		//config.addIcon("pixelcat.jpg", Files.FileType.Internal);
+
+        //config.fullscreen = true;
 
 		new LwjglApplication(new MyGdxGame(),config);
 

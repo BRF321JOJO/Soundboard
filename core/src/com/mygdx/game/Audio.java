@@ -3,8 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class Audio {
+import java.io.File;
+
+class Audio {
 
     //Fields
 
@@ -17,8 +20,8 @@ public class Audio {
     private static float panchange = 0.5f;
     private static float pitchchange = 0.02f;
 
-    protected static float Globalpitch = 1f;
-    protected static float Globalpan = 0f;
+    static float Globalpitch = 1f;
+    static float Globalpan = 0f;
 
 
     //Array of sound names
@@ -35,9 +38,11 @@ public class Audio {
     //Array of sounds
     private static Sound[] songs = new Sound[numberofbuttons];
 
+
     //Method to assign sound
+    //Only used so that sounds can be placed in the SoundAssets folder specifically
     private Sound createSong(String songname) {
-        return Gdx.audio.newSound(Gdx.files.internal(songname));
+        return Gdx.audio.newSound(Gdx.files.internal("SoundAssets" + File.separator + songname));
     }
 
     //Constructor
@@ -49,8 +54,13 @@ public class Audio {
             pitches[i] = 1f;
             pans[i] = 0f;
 
-            //Creates song
-            songs[i] = createSong(filename[i]);
+            //Try/catch to prevent creation on song not contained in SoundAssets folder
+            try {
+                //Creates song
+                songs[i] = createSong(filename[i]);
+            } catch (GdxRuntimeException e) {
+                System.out.println("You must place all sound files in the SoundAssets package");
+            }
         }
 
     }
@@ -58,11 +68,17 @@ public class Audio {
     //Method
     //Plays songs
     private static void playSong(int buttonpressed) {
-        songs[buttonpressed].play(volumes[buttonpressed], pitches[buttonpressed], pans[buttonpressed]);
-        System.out.println("Song " + buttonpressed + " was played");
+        try {
+            songs[buttonpressed].play(volumes[buttonpressed], pitches[buttonpressed], pans[buttonpressed]);
+            System.out.println("Song " + buttonpressed + " was played");
 
-        //Makes a new variable which can be used as the last button pressed
-        lastbuttonpressed = buttonpressed;
+            //Makes a new variable which can be used as the last button pressed
+            lastbuttonpressed = buttonpressed;
+        } catch (NullPointerException e) {
+            System.out.println("This sound was not placed in the SoundAssets package!");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("That button does not place a sound!");
+        }
     }
 
     //Stops songs
@@ -72,8 +88,29 @@ public class Audio {
         }
     }
 
+    //End of normal methods
+
+
+    //The following two methods are both used in attempt to shorten the code even shorter
+
+    //Faster way to create inputs
+    private boolean keyJustPressed(String key) {
+        return Gdx.input.isKeyJustPressed(Input.Keys.valueOf(key));
+    }
+
+
+
+    //Associate setting a key and playing a song
+    private void createKeyandSong (String createkey, int createbutton) {
+        if (keyJustPressed(createkey)) {
+            playSong(createbutton);
+        }
+    }
+
+
+
     //Update
-    void update(float delta) {
+    void update() {
 
         //Unknown, for some reason, Globalpan and Globalpitch increment double that of its value. So divide by 2 to fix.
 
@@ -174,12 +211,15 @@ public class Audio {
         if (!Debugmodeon) {
 
             //Tries to play a sound
-            try {
+            //try {
 
-                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-                    playSong(0);
-                }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                createKeyandSong("A",0);
+
+//                if (keyJustPressed("A")) {
+//                    playSong(0);
+//                }
+
+                if (keyJustPressed("B")) {
                     playSong(1);
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
@@ -262,9 +302,9 @@ public class Audio {
                 }
 
                 //Catches out of bound errors
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("That button does not play a sound!");
-            }
+//            } catch (ArrayIndexOutOfBoundsException e) {
+//                System.out.println("That button does not play a sound!");
+//            }
 
 
         }

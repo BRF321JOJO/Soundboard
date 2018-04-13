@@ -19,6 +19,7 @@ public class GameScreen implements Screen {
     private Audio audio;
     private Image image;
     private HUD hud;
+    private Options options;
 
     //Constructor
     GameScreen(MyGdxGame game) {
@@ -30,6 +31,7 @@ public class GameScreen implements Screen {
         audio = new Audio();
         image = new Image();
         hud = new HUD(game.batch);
+        options = new Options();
 
         gameCam = new OrthographicCamera();
         gamePort = new ExtendViewport(LEVEL_WIDTH, LEVEL_HEIGHT, gameCam);
@@ -43,7 +45,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        update();
 
         //Clears Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -53,11 +55,11 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(image.texture, image.posx, image.posy, image.width, image.height);
+        game.batch.draw(options.texture, options.posx, options.posy, options.width, options.height);
 
         game.batch.end();
         hud.stage.draw();
         game.batch.begin();
-
 
         game.batch.end();
     }
@@ -80,30 +82,10 @@ public class GameScreen implements Screen {
     }
 
     //Updates game using update method in each class
-    private void update(float delta) {
-
-        audio.update(delta);
-        image.update(delta);
-
-
-        //Says natural pitch if pitch at normal value
-        hud.update(delta);
-        if (Audio.Globalpitch == 1f) {
-            hud.updatePitch("Pitch: Natural");
-        } else {
-            hud.updatePitch("Pitch: " + Audio.Globalpitch);
-        }
-
-        //Says pan neutral if at normal value
-        if (Audio.Globalpan == 0f) {
-            hud.updatePan("Pan: Neutral");
-        } else {
-            hud.updatePan("Pan: " + Audio.Globalpan);
-        }
-
-
-        hud.updateLSHIFT("LSHIFT");
-        hud.updateRSHIFT("RSHIFT");
-        hud.updateSPACE("SPACE");
+    private void update() {
+        audio.update();
+        image.update();
+        hud.update();
+        options.update();
     }
 }

@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import java.io.File;
 
-public class HUD {
+class HUD {
     Stage stage;
     private Viewport viewport;
 
@@ -25,7 +25,7 @@ public class HUD {
 
     private BitmapFont pixelFont = new BitmapFont(
             //File.separator, acts as a / for distinguishing folders within folders
-            Gdx.files.internal("font" + File.separator + "pixelOperatorHB.fnt"),
+            Gdx.files.internal("Font" + File.separator + "pixelOperatorHB.fnt"),
             false
     );
 
@@ -83,7 +83,7 @@ public class HUD {
     }
 
 
-    public void update (float delta) {
+    void update () {
 
         //Changes size of LSHIFT if pressed
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
@@ -105,12 +105,31 @@ public class HUD {
         } else {
             SPACE.setFontScale(1.3f);
         }
+
+
+        //Says natural pitch if pitch at normal value
+        if (Audio.Globalpitch == 1f) {
+            updatePitch("Pitch: Natural");
+        } else {
+            updatePitch("Pitch: " + Audio.Globalpitch);
+        }
+
+        //Says pan neutral if at normal value
+        if (Audio.Globalpan == 0f) {
+            updatePan("Pan: Neutral");
+        } else {
+            updatePan("Pan: " + Audio.Globalpan);
+        }
+
+        updateLSHIFT("LSHIFT");
+        updateRSHIFT("RSHIFT");
+        updateSPACE("SPACE");
     }
 
+    private void updatePitch (String Globalpitchupdate) {Globalpitch.setText(Globalpitchupdate);}
+    private void updatePan (String Globalpanupdate) {Globalpan.setText(Globalpanupdate);}
+    private void updateLSHIFT (String LSHIFTupdate) {LSHIFT.setText(LSHIFTupdate);}
+    private void updateRSHIFT (String RSHIFTupdate) {RSHIFT.setText(RSHIFTupdate);}
+    private void updateSPACE (String SHIFTupdate) {SPACE.setText(SHIFTupdate);}
 
-    public void updatePitch (String Globalpitchupdate) {Globalpitch.setText(Globalpitchupdate);}
-    public void updatePan (String Globalpanupdate) {Globalpan.setText(Globalpanupdate);}
-    public void updateLSHIFT (String LSHIFTupdate) {LSHIFT.setText(LSHIFTupdate);}
-    public void updateRSHIFT (String RSHIFTupdate) {RSHIFT.setText(RSHIFTupdate);}
-    public void updateSPACE (String SHIFTupdate) {SPACE.setText(SHIFTupdate);}
 }

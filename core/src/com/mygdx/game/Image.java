@@ -3,7 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Image {
+class Image {
 
     Texture texture;
     int height;
@@ -28,8 +28,7 @@ public class Image {
     }
 
 
-    public void update(float delta) {
-
+    void update() {
         if (Gdx.input.isTouched()) {
 
             //Defines the x and y coordinates which mouse can be clicked
