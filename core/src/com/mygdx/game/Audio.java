@@ -13,7 +13,7 @@ class Audio {
 
     //For Debug
     private boolean Debugmodeon = false;
-    private static final int numberofbuttons = 3;
+    private static final int numberofbuttons = CreateAudio.Listofsongs.length;
     private static int lastbuttonpressed;
 
     //Controls global values
