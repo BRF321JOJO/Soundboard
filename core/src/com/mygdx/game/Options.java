@@ -2,40 +2,48 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-class Options {
+class Options extends AbstractImage {
 
-    Texture texture;
-    int height;
-    int width;
-    int posx;
-    int posy;
+    private static int heightconstant = 100;
+    private static int widthconstant = 100;
+    private static int posxconstant = 100;
+    private static int posyconstant = 500;
 
-    private int leftx = 0;
-    private int rightx = 0;
-    private int bottomy = 0;
-    private int topy = 0;
+    //Sets the location the image can be touched as its width and height
+    private int leftx = posxconstant;
+    private int rightx = posxconstant + widthconstant;
+    private int bottomy = posyconstant;
+    private int topy = posyconstant + heightconstant;
 
 
-    Options() {
-        texture = new Texture("Meme.jpg");
-        posx = 100;
-        posy = 500;
-        width = 100;
-        height = 100;
+    Options(SpriteBatch batch) {
+        super(
+            batch,
+            new Texture("Meme.jpg"),
+            posxconstant,
+            posyconstant,
+            widthconstant,
+            heightconstant
+        );
     }
 
 
     void update () {
-
+        //Whenever image is clicked, will take action
         if(Gdx.input.isTouched()) {
             if (Gdx.input.getX() > leftx && Gdx.input.getX() < rightx) {
                 if (Gdx.input.getY() > bottomy && Gdx.input.getY() < topy) {
 
-                    posx = 1000;
+                    //Sends image off screen (test)
+                    posx = MyGdxGame.V_WIDTH;
 
                 }
             }
         }
     }
+
+    @Override
+    void render() {batch.draw(texture,posx,posy,width,height);}
 }

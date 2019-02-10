@@ -31,7 +31,7 @@ public class GameScreen implements Screen {
         audio = new Audio();
         image = new Image();
         hud = new HUD(game.batch);
-        options = new Options();
+        options = new Options(game.batch);
 
         gameCam = new OrthographicCamera();
         gamePort = new ExtendViewport(LEVEL_WIDTH, LEVEL_HEIGHT, gameCam);
@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(image.texture, image.posx, image.posy, image.width, image.height);
-        game.batch.draw(options.texture, options.posx, options.posy, options.width, options.height);
+        options.render();
 
         game.batch.end();
         hud.stage.draw();

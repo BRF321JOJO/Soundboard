@@ -121,6 +121,7 @@ class HUD {
             updatePan("Pan: " + Audio.Globalpan);
         }
 
+
         updateLSHIFT("LSHIFT");
         updateRSHIFT("RSHIFT");
         updateSPACE("SPACE");

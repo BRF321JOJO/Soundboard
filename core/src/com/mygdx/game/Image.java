@@ -15,8 +15,10 @@ class Image {
 
     //Touching image boundaries
     private int leftx = 0;
+    //private int rightx = 100;
     private int rightx = MyGdxGame.V_WIDTH;
     private int bottomy = 0;
+    //private int topy = 100;
     private int topy = MyGdxGame.V_HEIGHT;
 
     Image() {
