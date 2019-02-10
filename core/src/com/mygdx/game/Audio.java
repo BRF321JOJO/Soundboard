@@ -75,7 +75,19 @@ class Audio {
 
     }
 
-    //Method
+    //Methods
+
+
+    //Resets all values
+    private void resetvalues() {
+        for (int i = 0; i < numberofbuttons; i++) {
+            volumes[i] = 1f;
+            pitches[i] = 1f;
+            pans[i] = 0f;
+        }
+    }
+
+
     //Plays songs
     private static void playSong(int buttonpressed) {
         try {
@@ -129,6 +141,11 @@ class Audio {
 
     //Update
     void update() {
+
+        //If Alt Right is pressed, all values are reset
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_RIGHT)){
+            resetvalues();
+        }
 
         //Unknown, for some reason, Globalpan and Globalpitch increment double that of its value. So divide by 2 to fix.
 

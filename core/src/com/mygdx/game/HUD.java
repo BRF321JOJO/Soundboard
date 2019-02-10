@@ -23,6 +23,9 @@ class HUD {
     private Label RSHIFT;
     private Label SPACE;
 
+
+    private double audiocontant;
+
     private BitmapFont pixelFont = new BitmapFont(
             //File.separator, acts as a / for distinguishing folders within folders
             Gdx.files.internal("Font" + File.separator + "pixelOperatorHB.fnt"),
@@ -107,11 +110,17 @@ class HUD {
         }
 
 
+        //Corrects for the unnecessary decimal values of pitch
+        //This is done by rounding to the nearest hundredths place
+        //This is done by: multiplying by 100, rounding to the whole number, dividing by 100
+        audiocontant = (double)((Math.ceil(Audio.Globalpitch * 100))/100);
+
+
         //Says natural pitch if pitch at normal value
         if (Audio.Globalpitch == 1f) {
             updatePitch("Pitch: Natural");
         } else {
-            updatePitch("Pitch: " + Audio.Globalpitch);
+            updatePitch("Pitch: " + audiocontant);
         }
 
         //Says pan neutral if at normal value
